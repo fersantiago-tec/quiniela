@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiniela Familiar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">MUNDIAL 2026</p>
+      <h1>⚽ Quiniela Familiar</h1>
+      <p id="lastUpdate">Cargando resultados...</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <div class="panel-title">
+        <div>
+          <span class="label">EN VIVO</span>
+          <h2>Partidos</h2>
+        </div>
+        <button id="refreshBtn">Actualizar</button>
+      </div>
+      <div id="matches" class="matches-grid">
+        <div class="loading">Cargando partidos...</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <div>
+          <span class="label">TABLA GENERAL</span>
+          <h2>Ranking familiar</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Jugador</th>
+              <th>Puntos</th>
+              <th>Exactos</th>
+              <th>Aciertos</th>
+            </tr>
+          </thead>
+          <tbody id="rankingBody">
+            <tr><td colspan="5" class="loading">Calculando ranking...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <div>
+          <span class="label">DETALLE</span>
+          <h2>Pronósticos por partido</h2>
+        </div>
+      </div>
+      <div id="predictions" class="predictions"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>La página se actualiza automáticamente cada minuto.</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
