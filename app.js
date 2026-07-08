@@ -57,7 +57,7 @@ const FLAGS = {
   espana:"🇪🇸", spain:"🇪🇸",
   belgica:"🇧🇪", belgium:"🇧🇪",
   noruega:"🇳🇴", norway:"🇳🇴",
-  inglaterra:"🏴", england:"🏴",
+  inglaterra:"🇬🇧", england:"🇬🇧",
   argentina:"🇦🇷",
   suiza:"🇨🇭", switzerland:"🇨🇭"
 };
