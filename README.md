@@ -1,44 +1,19 @@
-# Quiniela Familiar
+# Quiniela - Cuartos de final
 
-## Lo mínimo para usarla
+La hoja solo necesita esto:
 
-1. Abre `pronosticos.csv`.
-2. Reemplaza los ejemplos por tus pronósticos.
-3. Conserva exactamente estas columnas:
-   - Persona
-   - PartidoID
-   - Local
-   - Visitante
-   - PronosticoLocal
-   - PronosticoVisitante
-4. Sube todos los archivos a un repositorio de GitHub.
-5. Activa GitHub Pages desde Settings > Pages.
-6. Abre el link público.
+Nombre,P1,P2,P3,P4
+Fer,2-1,2-0,1-2,3-1
+Papá,1-0,1-1,0-2,2-0
 
-La página:
-- consulta resultados de partidos;
-- recalcula el ranking;
-- muestra partidos y marcadores;
-- actualiza automáticamente cada 60 segundos.
+P1 = Francia vs Marruecos
+P2 = España vs Bélgica
+P3 = Noruega vs Inglaterra
+P4 = Argentina vs Suiza
 
-## Usar Google Sheets en lugar del CSV
+Reglas:
+- 3 puntos por marcador exacto.
+- 1 punto por acertar ganador o empate.
+- 0 puntos en cualquier otro caso.
 
-Publica la pestaña de pronósticos como CSV y cambia en `config.js`:
-
-predictionsUrl: "TU_URL_CSV_PUBLICA"
-
-No cambies los encabezados.
-
-## Sistema de puntos actual
-
-- 5 puntos: marcador exacto.
-- 3 puntos: ganador/empate correcto.
-- +1 punto: acertar los goles de al menos uno de los equipos.
-
-Puedes cambiarlo en `config.js`.
-
-## Nota sobre los partidos
-
-La web usa una API pública independiente para los datos del Mundial 2026.
-Como no es una fuente oficial de FIFA, si cambia su estructura la sección de partidos puede requerir ajuste.
-El archivo `app.js` incluye un adaptador con varias variantes comunes de campos y mensajes de error.
+No tienes que repetir nombres ni partidos.
