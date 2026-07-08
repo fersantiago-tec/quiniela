@@ -158,11 +158,13 @@ function buildRanking(){
 function renderRanking(){
   document.getElementById("ranking").innerHTML=buildRanking().map((r,i)=>{
     const pos=i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1;
+    const exactBadge = r.exact>0
+      ? ` <span class="exact-badge" title="${r.exact} marcador${r.exact>1?"es":""} exacto${r.exact>1?"s":""} (valen 3 pts c/u)">🎯 ${r.exact}</span>`
+      : "";
     return `<tr>
       <td>${pos}</td>
       <td>${esc(r.name)}</td>
-      <td><b>${r.pts}</b></td>
-      <td>${r.exact}</td>
+      <td><b>${r.pts}</b>${exactBadge}</td>
     </tr>`;
   }).join("");
 }
