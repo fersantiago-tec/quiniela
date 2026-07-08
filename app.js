@@ -40,6 +40,17 @@ function normalizeText(value){
     .replace(/\s+/g," ");
 }
 
+// Busca un valor en el objeto de la persona sin importar acentos/mayúsculas
+// en el nombre de la columna. Esto evita que "España"/"Bélgica" del CSV
+// (que a veces vienen con codificación distinta) no encuentren match exacto
+// contra los nombres de columna definidos en config.js.
+function getField(person, colName){
+  if(colName in person) return person[colName];
+  const target = normalizeText(colName);
+  const key = Object.keys(person).find(k=>normalizeText(k)===target);
+  return key ? person[key] : undefined;
+}
+
 function normalizeWinner(value, match){
   const v = normalizeText(value);
   const homeEs = normalizeText(match.homeCol);
@@ -59,14 +70,24 @@ function normalizeApiGame(raw,index){
   const finished=raw.finished===true || String(raw.finished).toLowerCase()==="true" ||
     /finished|final|ft|complete/.test(statusText);
   const live=!finished && statusText && !/notstarted|scheduled|upcoming/.test(statusText);
+  const state = finished ? "FINAL" : live ? "EN VIVO" : "PRÓXIMO";
+
+  // Solo confiamos en el marcador si el partido ya inició/terminó.
+  // Antes de eso, muchas APIs devuelven 0-0 o valores no numéricos como
+  // placeholder, y eso se mostraba como "0-0" o "NaN-NaN".
+  let hs=null, as=null;
+  if(state!=="PRÓXIMO"){
+    const h=Number(raw.home_score), a=Number(raw.away_score);
+    hs = raw.home_score!=null && Number.isFinite(h) ? h : null;
+    as = raw.away_score!=null && Number.isFinite(a) ? a : null;
+  }
 
   return {
     id:String(raw.id ?? raw.game_id ?? raw.number ?? index+1),
     home:String(raw.home_team_name_en ?? raw.home_team_label ?? raw.home_team?.name ?? raw.home_team ?? ""),
     away:String(raw.away_team_name_en ?? raw.away_team_label ?? raw.away_team?.name ?? raw.away_team ?? ""),
-    hs: raw.home_score == null ? null : Number(raw.home_score),
-    as: raw.away_score == null ? null : Number(raw.away_score),
-    state: finished ? "FINAL" : live ? "EN VIVO" : "PRÓXIMO"
+    hs, as,
+    state
   };
 }
 
@@ -97,14 +118,14 @@ function scorePrediction(person,cfg,game){
     return {points:0, exact:false};
   }
 
-  const ph=Number(person[cfg.homeCol]);
-  const pa=Number(person[cfg.awayCol]);
+  const ph=Number(getField(person,cfg.homeCol));
+  const pa=Number(getField(person,cfg.awayCol));
 
   if(Number.isFinite(ph) && Number.isFinite(pa) && ph===game.hs && pa===game.as){
     return {points:3, exact:true};
   }
 
-  const predictedWinner=normalizeWinner(person[cfg.winnerCol],cfg);
+  const predictedWinner=normalizeWinner(getField(person,cfg.winnerCol),cfg);
   if(predictedWinner && predictedWinner===realOutcome(game)){
     return {points:1, exact:false};
   }
@@ -158,15 +179,15 @@ function renderMatches(){
 
       <div class="scoreboard">
         <span>${esc(cfg.homeCol)}</span>
-        <span class="real-score">${g.hs ?? "–"} - ${g.as ?? "–"}</span>
+        <span class="real-score">${g.state==="PRÓXIMO" ? "–" : (g.hs ?? "–")} - ${g.state==="PRÓXIMO" ? "–" : (g.as ?? "–")}</span>
         <span>${esc(cfg.awayCol)}</span>
       </div>
 
       <div class="picks">
         ${people.map(p=>{
-          const homeGoals=p[cfg.homeCol] || "—";
-          const awayGoals=p[cfg.awayCol] || "—";
-          const winner=p[cfg.winnerCol] || "—";
+          const homeGoals=getField(p,cfg.homeCol) || "—";
+          const awayGoals=getField(p,cfg.awayCol) || "—";
+          const winner=getField(p,cfg.winnerCol) || "—";
           const result=scorePrediction(p,cfg,g);
 
           return `<div class="pick">
