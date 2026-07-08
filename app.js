@@ -51,6 +51,20 @@ function getField(person, colName){
   return key ? person[key] : undefined;
 }
 
+const FLAGS = {
+  francia:"🇫🇷", france:"🇫🇷",
+  marruecos:"🇲🇦", morocco:"🇲🇦",
+  espana:"🇪🇸", spain:"🇪🇸",
+  belgica:"🇧🇪", belgium:"🇧🇪",
+  noruega:"🇳🇴", norway:"🇳🇴",
+  inglaterra:"🏴", england:"🏴",
+  argentina:"🇦🇷",
+  suiza:"🇨🇭", switzerland:"🇨🇭"
+};
+function getFlag(name){
+  return FLAGS[normalizeText(name)] || "⚽";
+}
+
 function normalizeWinner(value, match){
   const v = normalizeText(value);
   const homeEs = normalizeText(match.homeCol);
@@ -169,20 +183,25 @@ function renderRanking(){
   }).join("");
 }
 
+function stateClass(state){
+  return state==="FINAL" ? "final" : state==="EN VIVO" ? "live" : "upcoming";
+}
+
 function renderMatches(){
   document.getElementById("matches").innerHTML=C.matches.map(cfg=>{
     const g=findGame(cfg);
+    const scoreShown = g.state!=="PRÓXIMO";
 
     return `<article class="match">
       <div class="match-head">
-        <span>${esc(cfg.homeCol)} vs ${esc(cfg.awayCol)}</span>
-        <span>${g.state}</span>
+        <span class="teams-label">${getFlag(cfg.home)} ${esc(cfg.homeCol)} <span class="vs">vs</span> ${esc(cfg.awayCol)} ${getFlag(cfg.away)}</span>
+        <span class="state-badge state-${stateClass(g.state)}">${g.state}</span>
       </div>
 
       <div class="scoreboard">
-        <span>${esc(cfg.homeCol)}</span>
-        <span class="real-score">${g.state==="PRÓXIMO" ? "–" : (g.hs ?? "–")} - ${g.state==="PRÓXIMO" ? "–" : (g.as ?? "–")}</span>
-        <span>${esc(cfg.awayCol)}</span>
+        <span class="team-name">${getFlag(cfg.home)} ${esc(cfg.homeCol)}</span>
+        <span class="real-score">${scoreShown ? (g.hs ?? "–") : "–"} <small>-</small> ${scoreShown ? (g.as ?? "–") : "–"}</span>
+        <span class="team-name">${esc(cfg.awayCol)} ${getFlag(cfg.away)}</span>
       </div>
 
       <div class="picks">
@@ -191,10 +210,12 @@ function renderMatches(){
           const awayGoals=getField(p,cfg.awayCol) || "—";
           const winner=getField(p,cfg.winnerCol) || "—";
           const result=scorePrediction(p,cfg,g);
+          const hit = g.state==="FINAL" && result.points>0;
 
-          return `<div class="pick">
-            <span>${esc(p.Nombre)}: ${esc(homeGoals)}-${esc(awayGoals)} · ${esc(winner)}</span>
-            <span class="pts">${g.state==="FINAL" ? "+"+result.points : ""}</span>
+          return `<div class="pick ${hit?"pick-hit":""}">
+            <span class="pick-name">${esc(p.Nombre)}</span>
+            <span class="pick-guess">${esc(homeGoals)}-${esc(awayGoals)} <span class="pick-winner">${esc(winner)}</span></span>
+            <span class="pts ${result.points===3?"pts-exact":result.points===1?"pts-hit":""}">${g.state==="FINAL" ? "+"+result.points : ""}</span>
           </div>`;
         }).join("")}
       </div>
