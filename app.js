@@ -114,12 +114,22 @@ async function loadGames(){
 }
 
 function findGame(cfg){
-  return apiGames.find(g=>g.id===cfg.id) ||
-         apiGames.find(g=>
-           normalizeText(g.home)===normalizeText(cfg.home) &&
-           normalizeText(g.away)===normalizeText(cfg.away)
-         ) ||
-         {id:cfg.id,home:cfg.home,away:cfg.away,hs:null,as:null,state:"PRÓXIMO"};
+  const byId = apiGames.find(g=>g.id===cfg.id);
+  if(byId) return byId;
+
+  const byName = apiGames.find(g=>
+    normalizeText(g.home)===normalizeText(cfg.home) &&
+    normalizeText(g.away)===normalizeText(cfg.away)
+  );
+  if(byName) return byName;
+
+  console.warn(
+    `[quiniela] No se encontró partido para ${cfg.home} vs ${cfg.away} (id esperado: ${cfg.id}). ` +
+    `Partidos disponibles en la API:`,
+    apiGames.map(g=>({id:g.id, home:g.home, away:g.away, state:g.state}))
+  );
+
+  return {id:cfg.id,home:cfg.home,away:cfg.away,hs:null,as:null,state:"PRÓXIMO"};
 }
 
 function realOutcome(game){
