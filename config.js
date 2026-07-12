@@ -34,7 +34,10 @@ window.CONFIG = {
       away: "Switzerland",
       homeCol: "Argentina",
       awayCol: "Suiza",
-      winnerCol: "Gana Argentina-Suiza"
+      winnerCol: "Gana Argentina-Suiza",
+      // Resultado puesto a mano porque la API no cargaba este partido.
+      // Bórralo cuando quieras que vuelva a jalar el marcador automático.
+      override: { hs: 3, as: 1, state: "FINAL" }
     }
   ]
 };
