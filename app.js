@@ -114,6 +114,12 @@ async function loadGames(){
 }
 
 function findGame(cfg){
+  // Si el partido trae un resultado manual (override), ese manda siempre,
+  // sin importar lo que diga la API.
+  if(cfg.override){
+    return {id:cfg.id, home:cfg.home, away:cfg.away, hs:cfg.override.hs, as:cfg.override.as, state:cfg.override.state};
+  }
+
   const byId = apiGames.find(g=>g.id===cfg.id);
   if(byId) return byId;
 
