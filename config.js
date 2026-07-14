@@ -5,39 +5,20 @@ window.CONFIG = {
 
   matches: [
     {
-      id: "53452525",
+      id: "semi1",
       home: "France",
-      away: "Morocco",
+      away: "Spain",
       homeCol: "Francia",
-      awayCol: "Marruecos",
-      winnerCol: "Gana Francia-Marruecos"
+      awayCol: "España",
+      winnerCol: "Gana Francia-España"
     },
     {
-      id: "53452527",
-      home: "Spain",
-      away: "Belgium",
-      homeCol: "España",
-      awayCol: "Bélgica",
-      winnerCol: "Gana España-Bélgica"
-    },
-    {
-      id: "53452529",
-      home: "Norway",
-      away: "England",
-      homeCol: "Noruega",
-      awayCol: "Inglaterra",
-      winnerCol: "Gana Noruega-Inglaterra"
-    },
-    {
-      id: "53452531",
+      id: "semi2",
       home: "Argentina",
-      away: "Switzerland",
+      away: "England",
       homeCol: "Argentina",
-      awayCol: "Suiza",
-      winnerCol: "Gana Argentina-Suiza",
-      // Resultado puesto a mano porque la API no cargaba este partido.
-      // Bórralo cuando quieras que vuelva a jalar el marcador automático.
-      override: { hs: 3, as: 1, state: "FINAL" }
+      awayCol: "Inglaterra",
+      winnerCol: "Gana Argentina-Inglaterra"
     }
   ]
 };
